@@ -1,3 +1,4 @@
+--FUNCTION TO CREATE THE HOLIDAYS LIST
 CREATE OR REPLACE FUNCTION holidays_calendar(min_date varchar, max_date varchar)
 RETURNS array
 LANGUAGE PYTHON
@@ -18,7 +19,9 @@ def get_holidays(min_date,max_date):
 
 
     holidays_list = []
+    #here you can replace the country
     holidays_range= holidays.Brazil()
+    #define the range
     for holiday in holidays_range[min_date:max_date] :
         holidays_list.append(holiday)
 
@@ -27,7 +30,7 @@ def get_holidays(min_date,max_date):
 $$;
 
 
-
+--CALENDAR TABLE
 CREATE OR REPLACE TABLE calendar_holidays (
        MY_DATE          DATE        NOT NULL
       ,YEAR             SMALLINT    NOT NULL
@@ -37,10 +40,11 @@ CREATE OR REPLACE TABLE calendar_holidays (
       ,DAY_OF_WEEK      VARCHAR(9)  NOT NULL
       ,WEEK_OF_YEAR     SMALLINT    NOT NULL
       ,DAY_OF_YEAR      SMALLINT    NOT NULL
-      ,FERIADOS         DATE        NULL
+      ,HOLIDAYS         DATE        NULL
     )
     AS
       WITH CTE_MY_DATE AS (
+        --You can change the start date
         SELECT DATEADD(DAY, SEQ4(), '2022-01-01') AS MY_DATE
           FROM TABLE(GENERATOR(ROWCOUNT=>2000))),
 
